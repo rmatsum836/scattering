@@ -37,18 +37,17 @@ def calc_partial_vhf(trj,
 
     for elem1, elem2 in it.combinations_with_replacement(names[::-1], 2):
         for i, trj in enumerate(md.iterload(trj, top=gro, chunk=md_chunk, skip=skip)):
-            r, t, g_r_t = compute_partial_van_hove(trj=trj,
+            r, g_r_t = compute_partial_van_hove(trj=trj,
                                 chunk_length=chunk_length,
+                                selection1='name {}'.format(elem1),
+                                selection2='name {}'.format(elem2),
                                 r_range=r_range,
                                 bin_width=bin_width,
                                 periodic=periodic,
                                 opt=opt)
             g_r_list.append(g_r_t)
 
-            if i == 0:
-                global_t = t
-                time = trj.time
-
+        t = trj.time[:chunk_length]
         dt = get_dt(trj)
         g_r_t = np.mean(g_r_list, axis=0)
 
@@ -56,7 +55,7 @@ def calc_partial_vhf(trj,
         np.savetxt('vhf_{}_{}.txt'.format(elem1,elem2),
             g_r_t, header='# Van Hove Function, dt: {} fs, dr: {}'.format(
             dt,
-            np.unique(np.round(np.diff(time), 6))[0],
+            np.unique(np.round(np.diff(t), 6))[0],
         ))
         np.savetxt('r_{}_{}.txt'.format(elem1,elem2), r, header='# Times, ps')
         np.savetxt('r_{}_{}.txt'.format(elem1,elem2), t, header='# Positions, nm')
