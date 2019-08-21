@@ -9,7 +9,7 @@ from scattering.utils.utils import get_dt
 from scattering.utils.features import find_local_maxima
 
 
-def calc_partial_vhf(trj,
+def calc_partial_vhf(xtc,
                    gro,
                    md_chunk,
                    chunk_length=200,
@@ -32,11 +32,11 @@ def calc_partial_vhf(trj,
         Number of timesteps to skip
     """
     g_r_list = list()
-    frame = md.load_frame(trj, top=gro, index=1)
+    frame = md.load_frame(xtc, top=gro, index=1)
     names = list(set([i.name for i in frame.topology.atoms]))
 
     for elem1, elem2 in it.combinations_with_replacement(names[::-1], 2):
-        for i, trj in enumerate(md.iterload(trj, top=gro, chunk=md_chunk, skip=skip)):
+        for i, trj in enumerate(md.iterload(xtc, top=gro, chunk=md_chunk, skip=skip)):
             r, g_r_t = compute_partial_van_hove(trj=trj,
                                 chunk_length=chunk_length,
                                 selection1='name {}'.format(elem1),
