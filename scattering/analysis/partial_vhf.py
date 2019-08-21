@@ -58,4 +58,4 @@ def calc_partial_vhf(trj,
             np.unique(np.round(np.diff(t), 6))[0],
         ))
         np.savetxt('r_{}_{}.txt'.format(elem1,elem2), r, header='# Times, ps')
-        np.savetxt('r_{}_{}.txt'.format(elem1,elem2), t, header='# Positions, nm')
+        np.savetxt('t_{}_{}.txt'.format(elem1,elem2), t, header='# Positions, nm')
